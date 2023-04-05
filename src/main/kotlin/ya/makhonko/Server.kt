@@ -14,6 +14,5 @@ object Server {
     }
     var port = 0
     var flagFirst = AtomicBoolean(false)
-    var name: String = ""
     lateinit var toSend: Set<String>
 }

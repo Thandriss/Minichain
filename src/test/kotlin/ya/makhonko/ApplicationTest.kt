@@ -4,7 +4,11 @@ import org.apache.commons.cli.UnrecognizedOptionException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import ya.makhonko.Block.Companion.isValid
 import ya.makhonko.Server.toSend
+import java.math.BigInteger
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class ApplicationTest {
 
@@ -51,7 +55,7 @@ class ApplicationTest {
 
     @Test
     fun checkArgs() {
-        var thrown1 = assertThrows<IllegalArgumentException> {
+        val thrown1 = assertThrows<IllegalArgumentException> {
             cmdParser(
                 arrayOf(
                     "-p",
@@ -62,7 +66,7 @@ class ApplicationTest {
                 )
             )
         }
-        var thrown2 = assertThrows<IllegalArgumentException> {
+        val thrown2 = assertThrows<IllegalArgumentException> {
             cmdParser(
                 arrayOf(
                     "-p",
@@ -73,7 +77,7 @@ class ApplicationTest {
                 )
             )
         }
-        var thrown3 = assertThrows<IllegalArgumentException> {
+        val thrown3 = assertThrows<IllegalArgumentException> {
             cmdParser(
                 arrayOf(
                     "-n",
@@ -82,7 +86,7 @@ class ApplicationTest {
                 )
             )
         }
-        var thrown4 = assertThrows<IllegalArgumentException> {
+        val thrown4 = assertThrows<IllegalArgumentException> {
             cmdParser(
                 arrayOf(
                     "-p",
@@ -91,7 +95,7 @@ class ApplicationTest {
                 )
             )
         }
-        var thrown5 = assertThrows<IllegalArgumentException> {
+        val thrown5 = assertThrows<IllegalArgumentException> {
             cmdParser(
                 arrayOf(
                     "-p",
@@ -102,17 +106,11 @@ class ApplicationTest {
                 )
             )
         }
-        var thrown6 = assertThrows<IllegalArgumentException> {
+        val thrown6 = assertThrows<IllegalArgumentException> {
             cmdParser(
                 arrayOf()
             )
         }
-        assertEquals("Wrong address!", thrown1.message)
-        assertEquals("Wrong address!", thrown2.message)
-        assertEquals("Clarify port!", thrown3.message)
-        assertEquals("Clarify nodes!", thrown4.message)
-        assertEquals("Port is not a number!", thrown5.message)
-        assertEquals("Clarify port!", thrown6.message)
         val unrecognizedOption = assertThrows<UnrecognizedOptionException> {
             cmdParser(
                 arrayOf(
@@ -125,14 +123,20 @@ class ApplicationTest {
                 )
             )
         }
+        assertEquals("Wrong address!", thrown1.message)
+        assertEquals("Wrong address!", thrown2.message)
+        assertEquals("Clarify port!", thrown3.message)
+        assertEquals("Clarify nodes!", thrown4.message)
+        assertEquals("Port is not a number!", thrown5.message)
+        assertEquals("Clarify port!", thrown6.message)
         assertEquals("Unrecognized option: -r", unrecognizedOption.message)
     }
+
     @Test
     fun firstBlockProductionChecking() {
         toSend = setOf("127.0.0.1:8081")
         val blockProducing = BlockProduction()
         blockProducing.seed = 55555555L
-        var actualValue = blockProducing.initFirstBlock()
         assertEquals(
             Block(
                 "0",
@@ -141,10 +145,9 @@ class ApplicationTest {
                 "1w9XiQFaUK1KxIYIUkuS6gqWHG2hsJ86UEYw4mmP7m7KWGTCh4ve4HOlSMnWkIPiLkOHntuHyJh3xrMgTTICJOhIa7QcukKbh7uevKxKyOGtZipWPmIxQeWknN5ssrymudksaltFJrlqJZdb3HSUkNnzFEWABPkV5k8KhoZdkMrkQ8Wk50v5hOPFeI9X65Eoku3dIfnuZMWxAEzbXIWocrmwGQG7LN21seG8BewCmcfXbOYTxDpF0QggB5bNmvoH",
                 "347267"
             ),
-            actualValue
+            blockProducing.initFirstBlock()
         )
         blockProducing.seed = 5L
-        actualValue = blockProducing.initFirstBlock()
         assertEquals(
             Block(
                 "0",
@@ -153,10 +156,9 @@ class ApplicationTest {
                 "TkfLE6CZBARUrvV0nC5T2tnu2bBtyO9P2mrPpdKEFEeIcuQZBDvTsDhhvKQMmSctljo9cvQ7K3ZVMXOsqVRD9UDgfU1YIsE5ZblJbMlY2xjW6DJfaPJBazWas5Nh2uKBrFaZuhVR8texfsZd9EVAlCbSdsgJYNkpYsV7ZXwUhVqAj55THiAGBsFFKC8i1S4cIi8XuurL5REIm47TS9lkDi7mWzIZoFQ9NJx8OkgYKaV3QezMBKcBTXLUXIdzxHvC",
                 "860303"
             ),
-            actualValue
+            blockProducing.initFirstBlock()
         )
         blockProducing.seed = -10000000L
-        actualValue = blockProducing.initFirstBlock()
         assertEquals(
             Block(
                 "0",
@@ -165,7 +167,19 @@ class ApplicationTest {
                 "DKLcXHIkaMqWM1LFVqTry6sZIVlups0K2UKIgEGFJMocAIY1l2yIbCrhUJ6bh52ctajufBJksjUbaj0iF77KEpTazQHXqU2UEVk0ZtpMGyxdomkQQ2ibtVh2kiTNjZvvkDEKmr8JAG3gN2Up9GteGmTG40J5MhscXCN0FFeZrmA3YjknJCaxqZYWzQBE2qRykbprbD7oNNty9nwJcpz9yjgzkncoHDChgWUY7Xpn4XIs39jgPLrS1ZG358j7OoQu",
                 "2802395"
             ),
-            actualValue
+            blockProducing.initFirstBlock()
         )
+    }
+    @Test
+    fun blockMethodsTests () {
+        toSend = setOf("127.0.0.1:8081")
+        val blockProducing = BlockProduction()
+        blockProducing.seed = 55555555L
+        val firstBlock = blockProducing.initFirstBlock()
+        val secondBlock = blockProducing.produceBlock(firstBlock)
+        var hash = Block.getHash(secondBlock)
+        assertTrue(hash.isValid())
+        hash = hash.add(BigInteger.ONE)
+        assertFalse(hash.isValid())
     }
 }

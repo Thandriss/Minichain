@@ -1,5 +1,6 @@
 package ya.makhonko.plugins
 
+import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
@@ -15,14 +16,13 @@ import ya.makhonko.Server.port
 import java.math.BigInteger
 import java.util.logging.Logger
 
-suspend fun Application.configureRouting(blockProducing: BlockProduction) {
+fun Application.configureRouting(blockProducing: BlockProduction) {
     Logger.getGlobal().info("Start at $port port")
     if (flagFirst.get()) {
         val producedBlock = blockProducing.initFirstBlock()
         Logger.getGlobal().info("Produced: $producedBlock")
         blockProducing.currentBlock.set(producedBlock)
         blockProducing.sendToNodes(producedBlock)
-        blockProducing.dbHelper.fillDB(producedBlock)
     }
     install(ContentNegotiation) {
         json()
@@ -41,21 +41,19 @@ suspend fun Application.configureRouting(blockProducing: BlockProduction) {
                     if (isSet) {
                         Logger.getGlobal().info("Updated: $possibleBlock")
                         blockProducing.sendToNodes(possibleBlock)
-                        blockProducing.dbHelper.fillDB(possibleBlock)
                     } else {
                         val block = blockProducing.findFresh()
                         Logger.getGlobal().info("Updated: $block")
                         blockProducing.currentBlock.set(block)
                         blockProducing.sendToNodes(block)
-                        blockProducing.dbHelper.fillDB(block)
                     }
                 }
             } else {
                 Logger.getGlobal().info("Updated: $possibleBlock")
                 blockProducing.currentBlock.set(possibleBlock)
                 blockProducing.sendToNodes(possibleBlock)
-                blockProducing.dbHelper.fillDB(possibleBlock)
             }
+            call.respond(HttpStatusCode.Accepted)
         }
         get("/") {
             if (blockProducing.currentBlock.get() != null) {

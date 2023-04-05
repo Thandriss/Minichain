@@ -8,7 +8,6 @@ import kotlinx.coroutines.launch
 import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.Option
 import org.apache.commons.cli.Options
-import ya.makhonko.Server.name
 import ya.makhonko.Server.flagFirst
 import ya.makhonko.Server.toSend
 import ya.makhonko.Server.port
@@ -58,7 +57,6 @@ fun cmdParser(args: Array<String>) {
         throw IllegalArgumentException("Clarify nodes!")
     }
     if (parsed.hasOption("f")) flagFirst.set(true) else flagFirst.set(false)
-    if (parsed.hasOption("d")) name = parsed.getOptionValues("d")[0]
 }
 
 fun Application.module() {

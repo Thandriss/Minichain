@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicReference
 import java.util.logging.Logger
 
 class BlockProduction {
-    val dbHelper = DataSaver()
     val currentBlock: AtomicReference<Block> = AtomicReference<Block>()
     val nodesToSend = Server.toSend
     var seed = 55555555555L
@@ -29,7 +28,6 @@ class BlockProduction {
                     if (isSet) {
                         Logger.getGlobal().info("Produced block: $producedBlock")
                         sendToNodes(producedBlock)
-                        dbHelper.fillDB(producedBlock)
                     } else {
                         setFresh(fresh)
                     }
@@ -44,7 +42,6 @@ class BlockProduction {
         Logger.getGlobal().info("Updated block: $freshBlock")
         currentBlock.set(freshBlock)
         sendToNodes(freshBlock)
-        dbHelper.fillDB(freshBlock)
     }
 
     suspend fun sendToOneNode(node: String, producedBlock: Block) {

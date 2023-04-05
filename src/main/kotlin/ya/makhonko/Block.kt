@@ -39,8 +39,7 @@ data class Block(
         }
 
         fun getHash(block: Block): BigInteger {
-            val sumBlock =
-                sumBlock(BigInteger(block.index), BigInteger(block.prev_hash), block.data, BigInteger(block.nonce))
+            val sumBlock = sumBlock(BigInteger(block.index), BigInteger(block.prev_hash), block.data, BigInteger(block.nonce))
             val digest: MessageDigest = MessageDigest.getInstance("SHA-256")
             val hash = digest.digest(sumBlock.toByteArray())
             return BigInteger(hash)

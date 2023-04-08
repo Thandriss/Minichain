@@ -63,7 +63,7 @@ class RoutingTest {
         }
     }
     @Test
-    fun checkAverageResponse() {
+    fun checkAverageTime() {
         val responseAmount = 1000
         runBlocking {
             Server.port = 8080

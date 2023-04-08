@@ -1,12 +1,26 @@
 package ya.makhonko
 
+import io.ktor.client.call.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.testing.*
+import junit.framework.Assert
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.apache.commons.cli.UnrecognizedOptionException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import ya.makhonko.Block.Companion.isValid
+import ya.makhonko.Server.flagFirst
+import ya.makhonko.Server.port
 import ya.makhonko.Server.toSend
+import ya.makhonko.plugins.configureRouting
 import java.math.BigInteger
+import java.util.logging.Logger
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -130,6 +144,17 @@ class ApplicationTest {
         assertEquals("Port is not a number!", thrown5.message)
         assertEquals("Clarify port!", thrown6.message)
         assertEquals("Unrecognized option: -r", unrecognizedOption.message)
+       cmdParser(
+            arrayOf(
+                "-p",
+                "8080",
+                "-n",
+                "127.0.0.1:8081,127.0.0.1:8082",
+                "-f"
+            )
+        )
+        assertEquals(flagFirst.get(), true)
+        assertEquals(toSend, setOf("127.0.0.1:8081", "127.0.0.1:8082"))
     }
 
     @Test

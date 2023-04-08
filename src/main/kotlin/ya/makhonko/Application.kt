@@ -30,13 +30,9 @@ fun cmdParser(args: Array<String>) {
     val firstOption = Option("f", "first", false, "Generation of the first block")
     firstOption.setOptionalArg(true)
     firstOption.argName = "first block"
-    val dbOption = Option("d", "database", true, "Set name for database")
-    dbOption.args = 1
-    dbOption.setOptionalArg(true)
     sumOptions.addOption(portOption)
     sumOptions.addOption(firstOption)
     sumOptions.addOption(nodeOption)
-    sumOptions.addOption(dbOption)
     val defaultParser = DefaultParser()
     val parsed = defaultParser.parse(sumOptions, args)
     if (parsed.hasOption("p")) {

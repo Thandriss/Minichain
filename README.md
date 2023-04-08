@@ -1,9 +1,9 @@
 # Minichain
 
 Main:
-[![Tests](https://github.com/Thandriss/Minichain/actions/workflows/gradle-test.yml/badge.svg?branch=main)](https://github.com/Thandriss/Minichain/actions/workflows/gradle-tests.yml)
+[![Tests](https://github.com/Thandriss/Minichain/actions/workflows/gradle-tests.yml/badge.svg?branch=main)](https://github.com/Thandriss/Minichain/actions/workflows/gradle-tests.yml)
 Develop:
-[![Tests](https://github.com/Thandriss/Minichain/actions/workflows/gradle-test.yml/badge.svg?branch=develop)](https://github.com/Thandriss/Minichain/actions/workflows/gradle-test.yml)
+[![Tests](https://github.com/Thandriss/Minichain/actions/workflows/gradle-tests.yml/badge.svg?branch=develop)](https://github.com/Thandriss/Minichain/actions/workflows/gradle-tests.yml)
 Для осуществления работы сервера был использован фреймворк Ktor.
 
 Для сборки артефакта:

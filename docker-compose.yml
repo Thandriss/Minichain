@@ -4,21 +4,21 @@ services:
       image: thandriss/minichain
       container_name: server1
       network_mode: host
-      command: java -jar /minichain/build/libs/Minichain-0.0.1.jar -p 8080 -n http://127.0.0.1:8081 -d a.db -f
+      command: java -jar /minichain/build/libs/Minichain-0.0.1.jar -p 8080 -n 127.0.0.1:8081 -d a.db -f
       ports:
            - 8080:8080
    server2:
       image: thandriss/minichain
       container_name: server2
       network_mode: host
-      command: java -jar /minichain/build/libs/Minichain-0.0.1.jar -p 8081 -n http://127.0.0.1:8080,http://127.0.0.1:8082 -d b.db
+      command: java -jar /minichain/build/libs/Minichain-0.0.1.jar -p 8081 -n 127.0.0.1:8080,127.0.0.1:8082
       ports:
            - 8081:8081
    server3:
       image: thandriss/minichain
       container_name: server3
       network_mode: host
-      command: java -jar /minichain/build/libs/Minichain-0.0.1.jar -p 8082 -n http://127.0.0.1:8080,http://127.0.0.1:8081 -d c.db
+      command: java -jar /minichain/build/libs/Minichain-0.0.1.jar -p 8082 -n 127.0.0.1:8080,127.0.0.1:8081
       ports:
            - 8082:8082
 

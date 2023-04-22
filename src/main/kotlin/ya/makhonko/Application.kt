@@ -19,40 +19,14 @@ fun main(args: Array<String>) {
 }
 
 fun cmdParser(args: Array<String>) {
-    val sumOptions = Options()
-    val nodeOption = Option("n", "nodes", true, "Nodes in format: 127.0.0.1:8080,127.0.0.1:8081")
-    nodeOption.args = 1
-    nodeOption.setOptionalArg(false)
-    val portOption = Option("p", "port", true, "Input number of port to open the server")
-    portOption.args = 1
-    portOption.setOptionalArg(false)
-    portOption.argName = "port "
-    val firstOption = Option("f", "first", false, "Generation of the first block")
-    firstOption.setOptionalArg(true)
-    firstOption.argName = "first block"
-    sumOptions.addOption(portOption)
-    sumOptions.addOption(firstOption)
-    sumOptions.addOption(nodeOption)
-    val defaultParser = DefaultParser()
-    val parsed = defaultParser.parse(sumOptions, args)
-    if (parsed.hasOption("p")) {
-        val parsedPort = parsed.getOptionValues("p")[0].toIntOrNull()
-            ?: throw IllegalArgumentException("Port is not a number!")
-        port = parsedPort
-    } else {
-        throw IllegalArgumentException("Clarify port!")
-    }
-    if (parsed.hasOption("n")) {
-        val nodes = parsed.getOptionValues("n")[0]
-        val divNodes = nodes.split(",")
-        if (divNodes.any { !it.matches(Regex("((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}:\\d{1,5}")) }) {
-            throw IllegalArgumentException("Wrong address!")
-        }
-        toSend = divNodes.toSet()
-    } else {
-        throw IllegalArgumentException("Clarify nodes!")
-    }
-    if (parsed.hasOption("f")) flagFirst.set(true) else flagFirst.set(false)
+    port = System.getenv("PORT").toInt()
+    val nodes = System.getenv("NODES")
+    val divNodes = nodes.split(",")
+    toSend = divNodes.toSet()
+    if (System.getenv("FIRST") == "1")
+        flagFirst.set(true)
+    else
+        flagFirst.set(false)
 }
 
 fun Application.module() {

@@ -3,20 +3,32 @@ services:
    server1:
       image: thandriss/minichain
       container_name: server1
-      command: java -jar /minichain/Minichain-0.0.1.jar -p 8080 -n server3:8082,server2:8081 -f
+      command: java -jar /minichain/Minichain-0.0.1.jar
       ports:
          - 8080:8080
+      environment:
+         - PORT=8080
+         - NODES=server3:8082,server2:8081
+         - FIRST=1
    server2:
       image: thandriss/minichain
       container_name: server2
-      command: java -jar /minichain/Minichain-0.0.1.jar -p 8081 -n server1:8080,server3:8082
+      command: java -jar /minichain/Minichain-0.0.1.jar
       ports:
          - 8081:8081
+      environment:
+         - PORT=8081
+         - NODES=server1:8080,server3:8082
+         - FIRST=0
    server3:
       image: thandriss/minichain
       container_name: server3
-      command: java -jar /minichain/Minichain-0.0.1.jar -p 8082 -n server1:8080,server2:8081
+      command: java -jar /minichain/Minichain-0.0.1.jar
       ports:
          - 8082:8082
+      environment:
+         - PORT=8082
+         - NODES=server1:8080,server2:8081
+         - FIRST=0
 
 
